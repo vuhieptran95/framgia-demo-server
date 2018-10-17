@@ -230,4 +230,10 @@ app.get("/", (req, res) => {
   res.write("Hello");
   res.end();
 });
+
+app.get("/users", (req, res) => {
+  res.writeHead(200, { "content-type": "text/plain" });
+  res.write("Get users!");
+  res.end();
+});
 app.listen(6001, "localhost", () => console.log("express formidable started"));
