@@ -21,7 +21,11 @@ const util = require("util");
 
 app.use(cors());
 
-app.post("/users", async (req, res) => {
+var corsOptions = {
+  origin: "https://3000-dot-4604456-dot-devshell.appspot.com"
+};
+
+app.post("/users", cors(corsOptions), async (req, res) => {
   // res.header("Access-Control-Allow-Origin", "*");
   // res.header(
   //   "Access-Control-Allow-Headers",
@@ -127,7 +131,7 @@ app.post("/users", async (req, res) => {
   });
 });
 
-app.post("/test", (req, res) => {
+app.post("/test", cors(corsOptions), (req, res) => {
   // console.log(req);
   // res.writeHead(200, { "content-type": "text/plain" });
   // res.write("Trying to post users");
