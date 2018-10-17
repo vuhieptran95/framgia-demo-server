@@ -22,7 +22,7 @@ const util = require("util");
 app.use(cors());
 
 var corsOptions = {
-  origin: "https://3000-dot-4604456-dot-devshell.appspot.com"
+  origin: "http://localhost:3000"
 };
 
 app.post("/users", cors(corsOptions), async (req, res) => {
