@@ -131,7 +131,7 @@ app.post("/test", (req, res) => {
   // console.log(req);
   // res.writeHead(200, { "content-type": "text/plain" });
   // res.write("Trying to post users");
-  res.send(req.headers);
+  res.send("Hello from post test");
   // res.end();
 });
 
