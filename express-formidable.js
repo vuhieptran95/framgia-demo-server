@@ -8,6 +8,7 @@ const imagemin = require("imagemin");
 const imageminWebp = require("imagemin-webp");
 const cors = require("cors");
 const app = express();
+const util = require("util");
 
 // app.use(function(req, res, next) {
 //   res.header("Access-Control-Allow-Origin", "*");
@@ -124,6 +125,14 @@ app.post("/users", async (req, res) => {
       return;
     }
   });
+});
+
+app.post("/test", (req, res) => {
+  // console.log(req);
+  // res.writeHead(200, { "content-type": "text/plain" });
+  // res.write("Trying to post users");
+  res.send(req.headers);
+  // res.end();
 });
 
 app.put("/users", async (req, res) => {
