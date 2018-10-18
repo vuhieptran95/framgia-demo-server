@@ -11,7 +11,7 @@ const app = express();
 const util = require("util");
 const cors = require("cors");
 
- app.use(cors());
+app.use(cors());
 
 app.post("/users", async (req, res) => {
   // res.header("Access-Control-Allow-Origin", "*");
@@ -89,6 +89,8 @@ app.post("/users", async (req, res) => {
         Response.saveImageError(res, error);
         return;
       }
+      fs.unlink("./image-input/profile");
+      fs.unlink("./image-output/profile.webp");
     }
 
     if (await Validate.usernameExist(username)) {
@@ -193,6 +195,8 @@ app.put("/users", async (req, res) => {
         Response.saveImageError(res, error);
         return;
       }
+      fs.unlink("./image-input/profile");
+      fs.unlink("./image-output/profile.webp");
     }
 
     var profileImagePath = uploadRes
@@ -228,6 +232,7 @@ app.put("/users", async (req, res) => {
 
 app.get("/", (req, res) => {
   res.writeHead(200, { "content-type": "text/plain" });
+  // fs.unlink("/image-input/profile", err => console.log(err));
   res.write("Hello");
   res.end();
 });
