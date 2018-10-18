@@ -1,6 +1,1 @@
 runtime: nodejs8
-
-handlers:
-- url: /users
-  http_headers:
-    Access-Control-Allow-Origin: "*"
