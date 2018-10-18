@@ -19,7 +19,6 @@ const util = require("util");
 //   next();
 // });
 
-
 app.post("/users", async (req, res) => {
   // res.header("Access-Control-Allow-Origin", "*");
   // res.header(
@@ -244,4 +243,6 @@ app.get("/users", (req, res) => {
   res.write("Get users!");
   res.end();
 });
-app.listen(6001, () => console.log("express formidable started"));
+app.listen(process.env.PORT || 6001, () =>
+  console.log("express formidable started")
+);
