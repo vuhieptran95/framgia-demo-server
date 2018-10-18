@@ -7,6 +7,7 @@ const express = require("express");
 const imagemin = require("imagemin");
 const imageminWebp = require("imagemin-webp");
 const cors = require("cors");
+const path = require("path");
 const app = express();
 const util = require("util");
 
