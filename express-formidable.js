@@ -132,11 +132,11 @@ app.post("/users", cors(corsOptions), async (req, res) => {
 });
 
 app.post("/test", cors(corsOptions), (req, res) => {
-  // console.log(req);
-  // res.writeHead(200, { "content-type": "text/plain" });
-  // res.write("Trying to post users");
   res.send("Hello from post test");
-  // res.end();
+});
+
+app.get("/test", (req, res) => {
+  res.sendFile(path.join(__dirname, "/view/form.html"));
 });
 
 app.put("/users", async (req, res) => {
