@@ -6,7 +6,6 @@ const fs = require("fs");
 const express = require("express");
 const imagemin = require("imagemin");
 const imageminWebp = require("imagemin-webp");
-const cors = require("cors");
 const path = require("path");
 const app = express();
 const util = require("util");
@@ -20,13 +19,8 @@ const util = require("util");
 //   next();
 // });
 
-app.use(cors());
 
-var corsOptions = {
-  origin: "http://localhost:3000"
-};
-
-app.post("/users", cors(corsOptions), async (req, res) => {
+app.post("/users", async (req, res) => {
   // res.header("Access-Control-Allow-Origin", "*");
   // res.header(
   //   "Access-Control-Allow-Headers",
@@ -132,7 +126,7 @@ app.post("/users", cors(corsOptions), async (req, res) => {
   });
 });
 
-app.post("/test", cors(corsOptions), (req, res) => {
+app.post("/test", (req, res) => {
   res.send("Hello from post test");
 });
 

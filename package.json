@@ -2,9 +2,10 @@
   "name": "1stproject",
   "version": "1.0.0",
   "description": "",
-  "main": "hello-world.js",
+  "main": "express-formidable.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node express-formidable.js"
   },
   "author": "",
   "license": "ISC",
@@ -25,8 +26,5 @@
     "multer": "^1.4.0",
     "nodemon": "^1.18.4",
     "rimraf": "^2.6.2"
-  },
-  "scripts": {
-    "start": "node express-formidable.js"
   }
 }
