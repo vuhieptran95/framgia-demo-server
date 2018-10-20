@@ -13,7 +13,7 @@ const cors = require("cors");
 const mkdir = require("mkdirp-promise")
 const rimraf = require("rimraf")
 
-app.use(cors());
+// app.use(cors());
 
 app.post("/users", async (req, res) => {
   // res.header("Access-Control-Allow-Origin", "*");
@@ -63,8 +63,12 @@ app.post("/users", async (req, res) => {
       var input = path.join(__dirname, "image-input")
       var output = path.join(__dirname, "image-output")
       var outputFile = path.join(__dirname, "/image-output/profile.webp");
-      await mkdir("image-input")
-      await mkdir("image-output")
+      try {
+        await mkdir("image-input")
+        await mkdir("image-output")
+      } catch (error) {
+        console.log(error)
+      }
       // TODO save image
       try {
         fs.renameSync(oldpath, newpath);
@@ -169,75 +173,24 @@ app.put("/users", async (req, res) => {
         Response.isNotImage(res);
         return;
       }
-      var oldpath = image.path;
-      var newpath = path.join(__dirname, "image-input/profile");
-      var output = path.join(__dirname, "image-output")
-      var outputFile = path.join(__dirname, "/image-output/profile.webp");
-      // TODO save image
-      try {
-        fs.renameSync(oldpath, newpath);
-      } catch (error) {
-        Response.fileProcessingError(res, error);
-        return;
-      }
-      // TODO convert image
-      try {
-        await imagemin([newpath], output, {
-          use: [
-            imageminWebp({
-              size: 80 * 1024,
-              resize: { width: 350, height: 350 }
-            })
-          ]
-        });
-      } catch (error) {
-        Response.convertImageError(res, error);
-        return;
-      }
       // TODO save image to storage
       try {
-        uploadRes = await Fb.Bucket.upload(outputFile, {
+        uploadRes = await Fb.Bucket.upload(image.path, {
           destination: `users/${username}/profile-${Date.now()}.webp`,
           public: true
         });
+        res.send("!Done");
+        return;
         // profileImagePath = "https://storage.googleapis.com/my-demo-f85d3.appspot.com/" +
         // uploadRes[0].name
       } catch (error) {
         Response.saveImageError(res, error);
         return;
       }
-      fs.unlink(newpath);
-      fs.unlink(outputFile);
+      // rimraf(input, err => console.log(err))
+      // rimraf(output, err => console.log(err))
     }
 
-    var profileImagePath = uploadRes
-      ? "https://storage.googleapis.com/my-demo-f85d3.appspot.com/" +
-      uploadRes[0].name
-      : null;
-    console.log(profileImagePath);
-    try {
-      if (profileImagePath) {
-        await Fb.Db.collection("users")
-          .doc(username)
-          .update({
-            email: email,
-            name: name,
-            profileImage: profileImagePath
-          });
-      } else {
-        await Fb.Db.collection("users")
-          .doc(username)
-          .update({
-            email: email,
-            name: name
-          });
-      }
-      Response.userUpdated(res);
-      return;
-    } catch (error) {
-      Response.updateUserError(res, error);
-      return;
-    }
   });
 });
 
