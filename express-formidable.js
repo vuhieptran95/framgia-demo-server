@@ -163,7 +163,9 @@ app.put("/users", async (req, res) => {
         return;
       }
       var oldpath = image.path;
-      var newpath = "image-input/profile";
+      var newpath = path.join(__dirname, "image-input/profile");
+      var output = path.join(__dirname, "image-output")
+      var outputFile = path.join(__dirname, "/image-output/profile.webp");
       // TODO save image
       try {
         fs.renameSync(oldpath, newpath);
@@ -173,7 +175,7 @@ app.put("/users", async (req, res) => {
       }
       // TODO convert image
       try {
-        await imagemin(["image-input/profile"], "image-output", {
+        await imagemin([newpath], output, {
           use: [
             imageminWebp({
               size: 80 * 1024,
@@ -187,7 +189,7 @@ app.put("/users", async (req, res) => {
       }
       // TODO save image to storage
       try {
-        uploadRes = await Fb.Bucket.upload("./image-output/profile.webp", {
+        uploadRes = await Fb.Bucket.upload(outputFile, {
           destination: `users/${username}/profile-${Date.now()}.webp`,
           public: true
         });
@@ -197,8 +199,8 @@ app.put("/users", async (req, res) => {
         Response.saveImageError(res, error);
         return;
       }
-      fs.unlink("./image-input/profile");
-      fs.unlink("./image-output/profile.webp");
+      fs.unlink(newpath);
+      fs.unlink(outputFile);
     }
 
     var profileImagePath = uploadRes
