@@ -20,7 +20,7 @@ app.post("/users", async (req, res) => {
   //   "Origin, X-Requested-With, Content-Type, Accept"
   // );
   var form = new formidable.IncomingForm();
-  await form.parse(req, async function(err, fields, files) {
+  await form.parse(req, async function (err, fields, files) {
     var username = fields.username;
     var email = fields.email.toLowerCase();
     var name = fields.name;
@@ -57,7 +57,9 @@ app.post("/users", async (req, res) => {
         return;
       }
       var oldpath = image.path;
-      var newpath = "image-input/profile";
+      var newpath = path.join(__dirname, "image-input/profile");
+      var output = path.join(__dirname, "image-output")
+      var outputFile = path.join(__dirname, "/image-output/profile.webp");
       // TODO save image
       try {
         fs.renameSync(oldpath, newpath);
@@ -67,7 +69,7 @@ app.post("/users", async (req, res) => {
       }
       // TODO convert image
       try {
-        await imagemin(["image-input/profile"], "image-output", {
+        await imagemin([newpath], output, {
           use: [
             imageminWebp({
               size: 80 * 1024,
@@ -81,7 +83,7 @@ app.post("/users", async (req, res) => {
       }
       // TODO save image to storage
       try {
-        uploadRes = await Fb.Bucket.upload("./image-output/profile.webp", {
+        uploadRes = await Fb.Bucket.upload(outputFile, {
           destination: `users/${username}/profile-${Date.now()}.webp`,
           public: true
         });
@@ -89,8 +91,8 @@ app.post("/users", async (req, res) => {
         Response.saveImageError(res, error);
         return;
       }
-      fs.unlink("./image-input/profile");
-      fs.unlink("./image-output/profile.webp");
+      fs.unlink(newpath);
+      fs.unlink(outputFile);
     }
 
     if (await Validate.usernameExist(username)) {
@@ -100,7 +102,7 @@ app.post("/users", async (req, res) => {
 
     var profileImagePath = uploadRes
       ? "https://storage.googleapis.com/my-demo-f85d3.appspot.com/" +
-        uploadRes[0].name
+      uploadRes[0].name
       : "";
     try {
       await Fb.Db.collection("users")
@@ -131,7 +133,7 @@ app.get("/test", (req, res) => {
 
 app.put("/users", async (req, res) => {
   var form = new formidable.IncomingForm();
-  await form.parse(req, async function(err, fields, files) {
+  await form.parse(req, async function (err, fields, files) {
     console.log(files, fields);
     var username = fields.username;
     var email = fields.email.toLowerCase();
@@ -201,7 +203,7 @@ app.put("/users", async (req, res) => {
 
     var profileImagePath = uploadRes
       ? "https://storage.googleapis.com/my-demo-f85d3.appspot.com/" +
-        uploadRes[0].name
+      uploadRes[0].name
       : null;
     console.log(profileImagePath);
     try {
