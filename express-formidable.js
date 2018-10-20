@@ -10,6 +10,8 @@ const path = require("path");
 const app = express();
 const util = require("util");
 const cors = require("cors");
+const mkdir = require("mkdirp-promise")
+const rimraf = require("rimraf")
 
 app.use(cors());
 
@@ -58,8 +60,11 @@ app.post("/users", async (req, res) => {
       }
       var oldpath = image.path;
       var newpath = path.join(__dirname, "image-input/profile");
+      var input = path.join(__dirname, "image-input")
       var output = path.join(__dirname, "image-output")
       var outputFile = path.join(__dirname, "/image-output/profile.webp");
+      await mkdir("image-input")
+      await mkdir("image-output")
       // TODO save image
       try {
         fs.renameSync(oldpath, newpath);
@@ -91,8 +96,10 @@ app.post("/users", async (req, res) => {
         Response.saveImageError(res, error);
         return;
       }
-      fs.unlink(newpath);
-      fs.unlink(outputFile);
+      // fs.unlink(newpath);
+      rimraf(input, err => console.log(err))
+      rimraf(output, err => console.log(err))
+      // fs.unlink(outputFile);
     }
 
     if (await Validate.usernameExist(username)) {
