@@ -94,10 +94,12 @@ app.post("/users", async (req, res) => {
         Response.saveImageError(res, error);
         return;
       }
-      // fs.unlink(newpath);
-      rimraf.sync(input, err => console.log(err));
-      rimraf.sync(output, err => console.log(err));
-      // fs.unlink(outputFile);
+      try {
+        rimraf.sync(input);
+        rimraf.sync(output);
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     if (await Validate.usernameExist(username)) {
@@ -206,8 +208,12 @@ app.put("/users", async (req, res) => {
         Response.saveImageError(res, error);
         return;
       }
-      rimraf.sync(input, err => console.log(err));
-      rimraf.sync(output, err => console.log(err));
+      try {
+        rimraf.sync(input);
+        rimraf.sync(output);
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     var profileImagePath = uploadRes
