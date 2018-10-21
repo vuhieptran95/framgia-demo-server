@@ -13,6 +13,7 @@ const cors = require("cors");
 const mkdir = require("mkdirp-promise");
 const rimraf = require("rimraf");
 const os = require("os");
+const tmpDir = os.tmpdir();
 
 app.use(cors());
 
@@ -25,13 +26,13 @@ app.post("/users", async (req, res) => {
     var uploadRes = null;
     var image = files.profileImage;
     try {
-      var input = await mkdir(path.join(os.tmpdir(), "image-input"));
-      var output = await mkdir(path.join(os.tmpdir(), "image-output"));
+      var input = await mkdir(path.join(tmpDir, "image-input"));
+      var output = await mkdir(path.join(tmpDir, "image-output"));
+      var inputFile = path.join(input, "profile.jpeg");
+      var outputFile = path.join(output, "profile.webp");
     } catch (error) {
       console.log(error);
     }
-    var inputFile = path.join(input, "profile.jpeg");
-    var outputFile = path.join(output, "profile.webp");
 
     if (!Validate.usernameIsValid(username)) {
       Response.usernameIsNotValid(res);
@@ -146,10 +147,14 @@ app.put("/users", async (req, res) => {
     var uploadRes = null;
     var profileImagePath = null;
     var image = files.profileImage;
-    var input = await mkdir(path.join(os.tmpdir(), "image-input"));
-    var inputFile = path.join(input, "profile.jpeg");
-    var output = await mkdir(path.join(os.tmpdir(), "image-output"));
-    var outputFile = path.join(output, "profile.webp");
+    try {
+      var input = await mkdir(path.join(tmpDir, "image-input"));
+      var output = await mkdir(path.join(tmpDir, "image-output"));
+      var inputFile = path.join(input, "profile.jpeg");
+      var outputFile = path.join(output, "profile.webp");
+    } catch (error) {
+      console.log(error);
+    }
 
     if (!(await Validate.usernameExist(username))) {
       Response.userNotExists(res);
