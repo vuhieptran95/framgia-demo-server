@@ -95,8 +95,8 @@ app.post("/users", async (req, res) => {
         return;
       }
       // fs.unlink(newpath);
-      rimraf(input, err => console.log(err));
-      rimraf(output, err => console.log(err));
+      rimraf.sync(input, err => console.log(err));
+      rimraf.sync(output, err => console.log(err));
       // fs.unlink(outputFile);
     }
 
@@ -206,8 +206,8 @@ app.put("/users", async (req, res) => {
         Response.saveImageError(res, error);
         return;
       }
-      rimraf(input, err => console.log(err));
-      rimraf(output, err => console.log(err));
+      rimraf.sync(input, err => console.log(err));
+      rimraf.sync(output, err => console.log(err));
     }
 
     var profileImagePath = uploadRes
