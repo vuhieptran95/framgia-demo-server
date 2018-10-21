@@ -24,9 +24,13 @@ app.post("/users", async (req, res) => {
     var name = fields.name;
     var uploadRes = null;
     var image = files.profileImage;
-    var input = await mkdir(path.join(os.tmpdir(), "image-input"));
+    try {
+      var input = await mkdir(path.join(os.tmpdir(), "image-input"));
+      var output = await mkdir(path.join(os.tmpdir(), "image-output"));
+    } catch (error) {
+      console.log(error);
+    }
     var inputFile = path.join(input, "profile.jpeg");
-    var output = await mkdir(path.join(os.tmpdir(), "image-output"));
     var outputFile = path.join(output, "profile.webp");
 
     if (!Validate.usernameIsValid(username)) {
