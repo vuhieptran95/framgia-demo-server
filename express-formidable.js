@@ -26,8 +26,14 @@ app.post("/users", async (req, res) => {
     var uploadRes = null;
     var image = files.profileImage;
     try {
-      var input = await mkdir(path.join(tmpDir, "image-input"));
-      var output = await mkdir(path.join(tmpDir, "image-output"));
+      var input = path.join(tmpDir, "image-input");
+      var output = path.join(tmpDir, "image-output");
+      if (fs.existsSync(input) || fs.existsSync(output)) {
+        rimraf.sync(input);
+        rimraf.sync(output);
+      }
+      await mkdir(input);
+      await mkdir(output);
       var inputFile = path.join(input, "profile.jpeg");
       var outputFile = path.join(output, "profile.webp");
     } catch (error) {
@@ -141,7 +147,7 @@ app.get("/test", (req, res) => {
 app.put("/users", async (req, res) => {
   var form = new formidable.IncomingForm();
   await form.parse(req, async function(err, fields, files) {
-    console.log(files, fields);
+    // console.log(files, fields);
     var username = fields.username;
     var email = fields.email.toLowerCase();
     var name = fields.name;
@@ -150,8 +156,14 @@ app.put("/users", async (req, res) => {
     var profileImagePath = null;
     var image = files.profileImage;
     try {
-      var input = await mkdir(path.join(tmpDir, "image-input"));
-      var output = await mkdir(path.join(tmpDir, "image-output"));
+      var input = path.join(tmpDir, "image-input");
+      var output = path.join(tmpDir, "image-output");
+      if (fs.existsSync(input) || fs.existsSync(output)) {
+        rimraf.sync(input);
+        rimraf.sync(output);
+      }
+      await mkdir(input);
+      await mkdir(output);
       var inputFile = path.join(input, "profile.jpeg");
       var outputFile = path.join(output, "profile.webp");
     } catch (error) {
@@ -220,7 +232,7 @@ app.put("/users", async (req, res) => {
       ? "https://storage.googleapis.com/my-demo-f85d3.appspot.com/" +
         uploadRes[0].name
       : null;
-    console.log(profileImagePath);
+    // console.log(profileImagePath);
     try {
       if (profileImagePath) {
         await Fb.Db.collection("users")
