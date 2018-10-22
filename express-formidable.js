@@ -156,12 +156,8 @@ app.put("/users", async (req, res) => {
     var profileImagePath = null;
     var image = files.profileImage;
     try {
-      var input = path.join(tmpDir, "image-input");
-      var output = path.join(tmpDir, "image-output");
-      if (fs.existsSync(input) || fs.existsSync(output)) {
-        rimraf.sync(input);
-        rimraf.sync(output);
-      }
+      var input = path.join(tmpDir, `image-input-${Date.now()}`);
+      var output = path.join(tmpDir, `image-output-${Date.now()}`);
       await mkdir(input);
       await mkdir(output);
       var inputFile = path.join(input, "profile.jpeg");
@@ -220,12 +216,8 @@ app.put("/users", async (req, res) => {
         Response.saveImageError(res, error);
         return;
       }
-      try {
-        rimraf.sync(input);
-        rimraf.sync(output);
-      } catch (error) {
-        console.log(error);
-      }
+      rimraf(input, console.log);
+      rimraf(output, console.log);
     }
 
     var profileImagePath = uploadRes
